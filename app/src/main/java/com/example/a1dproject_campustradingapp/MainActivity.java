@@ -15,5 +15,6 @@ public class MainActivity extends AppCompatActivity {
         // Test for firebase connection.
         // To be deleted later.
         Toast.makeText(MainActivity.this, "Firebase connection success!", Toast.LENGTH_LONG).show();
+        System.out.println("Sicong access successfully");
     }
 }
