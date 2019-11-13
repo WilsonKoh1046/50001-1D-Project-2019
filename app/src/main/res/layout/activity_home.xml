@@ -6,14 +6,9 @@
     android:layout_height="match_parent"
     tools:context=".Home">
 
-    <SearchView
-        android:id="@+id/search"
-        android:layout_alignParentTop="true"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"/>
-
     <!-- To add content later -->
     <FrameLayout
+        android:id="@+id/fragment_section"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/bottom_navigation"/>
