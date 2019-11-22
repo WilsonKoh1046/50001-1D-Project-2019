@@ -3,6 +3,8 @@ package com.example.a1dproject_campustradingapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -61,6 +63,8 @@ public class UpdateProfile extends AppCompatActivity {
                 UserProfile userProfile=new UserProfile(name,email,id);
                 databaseReference.setValue(userProfile);
                 finish();
+                startActivity(new Intent(UpdateProfile.this,Home.class));
+
 
             }
         });

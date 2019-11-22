@@ -20,8 +20,6 @@ import com.google.firebase.auth.FirebaseAuth;
 public class HomeFragment extends Fragment {
 
     Activity context;
-    Button logOut;
-    FirebaseAuth firebaseAuth;
 
     @Nullable
     @Override
@@ -33,15 +31,6 @@ public class HomeFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        logOut = (Button)context.findViewById(R.id.button_log_out);
-        firebaseAuth = FirebaseAuth.getInstance();
-        logOut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                firebaseAuth.signOut();
-                context.finish();
-                startActivity(new Intent(context,LoginActivity.class));
             }
-        });
     }
-}
+
