@@ -25,16 +25,4 @@ public class HomeFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        ImageView cd = (ImageView) context.findViewById(R.id.thumbnail);
-        cd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, Product.class);
-                startActivity(intent);
-            }
-        });
-    }
 }
