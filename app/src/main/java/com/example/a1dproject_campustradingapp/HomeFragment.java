@@ -1,6 +1,7 @@
 package com.example.a1dproject_campustradingapp;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,9 +15,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 public class HomeFragment extends Fragment {
 
     Activity context;
+    Button logOut;
+    FirebaseAuth firebaseAuth;
 
     @Nullable
     @Override
@@ -25,4 +30,18 @@ public class HomeFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        logOut = (Button)context.findViewById(R.id.button_log_out);
+        firebaseAuth = FirebaseAuth.getInstance();
+        logOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                firebaseAuth.signOut();
+                context.finish();
+                startActivity(new Intent(context,LoginActivity.class));
+            }
+        });
+    }
 }
