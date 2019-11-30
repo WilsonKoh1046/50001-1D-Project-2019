@@ -170,7 +170,7 @@ public class HomeFragment extends Fragment {
             }
 
             public void bindHolder(int position) {
-                Picasso.get().load(items_list.get(position).getmImageUrl()).fit().centerCrop().into(this.image);   // * TODO
+                Picasso.get().load(items_list.get(position).getmImageUrl()).placeholder(R.drawable.ic_business_center_black_24dp).fit().centerCrop().into(this.image);   // * TODO
                 this.name.setText(items_list.get(position).getmName());             // * TODO
                 this.price.setText(items_list.get(position).getmPrice());            // * TODO
             }
