@@ -57,7 +57,7 @@ public class HomeFragment extends Fragment {
         recyclerView = (RecyclerView) view.findViewById(R.id.re_view);
         linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
-        databaseReference = FirebaseDatabase.getInstance().getReference().child("Uploaded"); // * TODO
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("uploads"); // * TODO
         list = new ArrayList<Upload>(); // list of the items we want to display           // * TODO
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh);
         searchInput = (EditText) view.findViewById(R.id.search_input);
@@ -170,7 +170,7 @@ public class HomeFragment extends Fragment {
             }
 
             public void bindHolder(int position) {
-                Picasso.get().load(items_list.get(position).getmImageUrl()).into(this.image);   // * TODO
+                Picasso.get().load(items_list.get(position).getmImageUrl()).fit().centerCrop().into(this.image);   // * TODO
                 this.name.setText(items_list.get(position).getmName());             // * TODO
                 this.price.setText(items_list.get(position).getmPrice());            // * TODO
             }
