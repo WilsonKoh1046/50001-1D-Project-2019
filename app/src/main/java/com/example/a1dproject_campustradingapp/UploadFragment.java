@@ -27,6 +27,7 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -55,6 +56,7 @@ public class UploadFragment extends Fragment {
 
     private StorageReference mStorageRef;
     private DatabaseReference mDatabaseRef;
+    private DatabaseReference mDatabaseRef_user;
 
     private StorageTask mUploadTask;
     Context context;
@@ -87,6 +89,7 @@ public class UploadFragment extends Fragment {
                 //save in a folder called "uploads" in the storage
         mStorageRef = FirebaseStorage.getInstance().getReference("uploads");
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("uploads");
+
 
         mButtonChooseImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -178,7 +181,11 @@ public class UploadFragment extends Fragment {
                                     mEditTextDescription.getText().toString().trim());
                             String uploadId = mDatabaseRef.push().getKey(); //create a new entry in database with unique Id
                             mDatabaseRef.child(uploadId).setValue(upload);  //set the Id's data as upload which contains the name and the imageUrl
-                            //mDatabaseRef.child(userId).setValue(upload);
+
+                            String currentUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                            mDatabaseRef_user = FirebaseDatabase.getInstance().getReference(currentUser);
+                            mDatabaseRef_user.child(upload.getmName()).setValue(upload);
+
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {

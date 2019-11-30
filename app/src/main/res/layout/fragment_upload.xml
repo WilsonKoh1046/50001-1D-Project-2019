@@ -12,6 +12,14 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <Spinner
+            android:id="@+id/spinner_type"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            />
+
         <EditText
             android:id="@+id/edit_text_file_name"
             android:layout_width="match_parent"
@@ -38,12 +46,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:hint="Contact Information" />
-        <Spinner
-            android:id="@+id/spinner_type"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"/>
+
 
 
         <EditText
