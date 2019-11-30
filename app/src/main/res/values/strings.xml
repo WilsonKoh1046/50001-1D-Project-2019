@@ -1,4 +1,15 @@
 <resources>
     <string name="app_name">Campus Trading App</string>
+    <string-array name="category_array">
+        <item>Choose a category</item>
+        <item>Electronics</item>
+        <item>Book</item>
+        <item>Furniture</item>
+        <item>Project material</item>
+        <item>Portable mobility device</item>
+        <item>Daily commodity</item>
+        <item>Food</item>
+        <item>Others</item>
+    </string-array>
     <string name="on_sales_string">In Stock: %s items</string>
 </resources>

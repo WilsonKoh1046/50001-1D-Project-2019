@@ -31,14 +31,13 @@ public class Home extends AppCompatActivity {
                     Fragment selectedFragment = null;
 
                     // navigate through the bottom navigation
-                    int id = menuItem.getItemId();
+                    /*
+                    // int id = menuItem.getItemId();
                     if (id == R.id.nav_home) {
                         selectedFragment = new HomeFragment();
-                    } else if (id == R.id.nav_account) {
-                        selectedFragment = new AccountFragment();
-                    }
+                    } */
 
-                    // selectedFragment = new HomeFragment();
+                    selectedFragment = new HomeFragment();
                     // replace the empty fragment with the main news feed page
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_section, selectedFragment).commit();
                     return true;

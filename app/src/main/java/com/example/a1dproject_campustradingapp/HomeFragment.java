@@ -41,7 +41,7 @@ public class HomeFragment extends Fragment {
 
     private DatabaseReference databaseReference;
     private RecyclerView.LayoutManager linearLayoutManager;
-    private ArrayList<Uploaded> list;    // * TODO
+    private ArrayList<Upload> list;    // * TODO
     private RecyclerView recyclerView;
     private homeFragmentAdapter adapter;
     private Activity context;
@@ -58,7 +58,7 @@ public class HomeFragment extends Fragment {
         linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
         databaseReference = FirebaseDatabase.getInstance().getReference().child("Uploaded"); // * TODO
-        list = new ArrayList<Uploaded>(); // list of the items we want to display           // * TODO
+        list = new ArrayList<Upload>(); // list of the items we want to display           // * TODO
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh);
         searchInput = (EditText) view.findViewById(R.id.search_input);
 
@@ -69,7 +69,7 @@ public class HomeFragment extends Fragment {
                     if (dataSnapshot.exists()) {
                         list.clear(); //  important, to prevent duplicated entries
                         for (DataSnapshot snapShot: dataSnapshot.getChildren()) {
-                            Uploaded items = snapShot.getValue(Uploaded.class); // * TODO
+                            Upload items = snapShot.getValue(Upload.class); // * TODO
                             list.add(items);
                         }
                         Collections.reverse(list); // sort the items starting from most recent
@@ -126,9 +126,9 @@ public class HomeFragment extends Fragment {
     }
 
     public void search(String s) {
-        ArrayList<Uploaded> result = new ArrayList<Uploaded>(); // * TODO
-        for (Uploaded items: list) {                            // * TODO
-            if (items.getName().toLowerCase().contains(s.toLowerCase())) { // match by keywords contained // * TODO
+        ArrayList<Upload> result = new ArrayList<Upload>(); // * TODO
+        for (Upload items: list) {                            // * TODO
+            if (items.getmName().toLowerCase().contains(s.toLowerCase())) { // match by keywords contained // * TODO
                 result.add(items);
             }
         }
@@ -150,9 +150,9 @@ public class HomeFragment extends Fragment {
 
     public class homeFragmentAdapter extends RecyclerView.Adapter {
 
-        private ArrayList<Uploaded> items_list; // * TODO
+        private ArrayList<Upload> items_list; // * TODO
 
-        public homeFragmentAdapter(ArrayList<Uploaded> data) {  // * TODO
+        public homeFragmentAdapter(ArrayList<Upload> data) {  // * TODO
             this.items_list = data;
         }
 
@@ -170,9 +170,9 @@ public class HomeFragment extends Fragment {
             }
 
             public void bindHolder(int position) {
-                Picasso.get().load(items_list.get(position).getImageURL()).into(this.image);   // * TODO
-                this.name.setText(items_list.get(position).getName());             // * TODO
-                this.price.setText(items_list.get(position).getPrice());            // * TODO
+                Picasso.get().load(items_list.get(position).getmImageUrl()).into(this.image);   // * TODO
+                this.name.setText(items_list.get(position).getmName());             // * TODO
+                this.price.setText(items_list.get(position).getmPrice());            // * TODO
             }
         }
 
@@ -193,7 +193,7 @@ public class HomeFragment extends Fragment {
             return items_list.size();
         }
 
-        public void filter(ArrayList<Uploaded> list) {  // * TODO
+        public void filter(ArrayList<Upload> list) {  // * TODO
             items_list = list;
             notifyDataSetChanged();
         }

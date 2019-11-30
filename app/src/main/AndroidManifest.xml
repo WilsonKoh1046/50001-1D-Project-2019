@@ -10,20 +10,21 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".ImagesActivity"></activity>
-        <activity android:name=".Home"></activity>
-        <activity android:name=".MainActivity"></activity>
-        <activity android:name=".Product"></activity>
-        <activity android:name=".ForgotPasswordActivity"></activity>
-        <activity android:name=".RegisterActivity"></activity>
-        <activity android:name=".LoginActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
+        <activity android:name=".Home" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".AccountActivity"></activity>
-        <activity android:name=".UpdateProfile"></activity>
+        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".Product" />
+        <activity android:name=".ForgotPasswordActivity"></activity>
+        <activity android:name=".RegisterActivity"></activity>
+        <activity android:name=".LoginActivity" />
+
+        <activity android:name=".SpinnerActivity"></activity>
+
     </application>
 
 </manifest>

@@ -11,10 +11,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.content.Context;
@@ -42,9 +44,12 @@ public class UploadFragment extends Fragment {
     private Button mButtonChooseImage;
     private Button mButtonUpload;
     private TextView mTextViewShowUploads;
-    private EditText mEditTextFileName;
+    private EditText mEditTextProductName;
     private ImageView mImageView;
     private ProgressBar mProgressBar;
+    private EditText mEditTextPrice;
+    private EditText mEditTextContactInfo;
+    private EditText mEditTextDescription;
 
     private Uri mImageUri;  //reference to the image
 
@@ -62,11 +67,24 @@ public class UploadFragment extends Fragment {
         mButtonChooseImage = view.findViewById(R.id.button_choose_image);
         mButtonUpload = view.findViewById(R.id.button_upload);
         mTextViewShowUploads = view.findViewById(R.id.textview_show_uploads);
-        mEditTextFileName = view.findViewById(R.id.edit_text_file_name);
+        mEditTextProductName = view.findViewById(R.id.edit_text_file_name);
         mImageView = view.findViewById(R.id.image_view);
         mProgressBar = view.findViewById(R.id.progreess_bar);
+        mEditTextPrice = view.findViewById(R.id.edit_text_price);
+        mEditTextDescription = view.findViewById(R.id.edit_text_description);
+        mEditTextContactInfo = view.findViewById(R.id.edit_text_contact_info);
 
-        //save in a folder called "uploads" in the storage
+        //TODO supply the spinner with the array using an instance of ArrayAdapter
+        Spinner spinner = (Spinner)view.findViewById(R.id.spinner_type);
+        //Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(context,
+                R.array.category_array,android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appear
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        spinner.setAdapter(adapter);
+
+                //save in a folder called "uploads" in the storage
         mStorageRef = FirebaseStorage.getInstance().getReference("uploads");
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("uploads");
 
@@ -154,10 +172,13 @@ public class UploadFragment extends Fragment {
                             }, 500); //delay the progress bar to see the processing
 
                             Toast.makeText(context, "Upload Successful", Toast.LENGTH_LONG).show();
-                            Upload upload = new Upload(mEditTextFileName.getText().toString().trim(),
-                                    taskSnapshot.getMetadata().getReference().getDownloadUrl().toString());
+                            Upload upload = new Upload(mEditTextProductName.getText().toString().trim(),
+                                    taskSnapshot.getMetadata().getReference().getDownloadUrl().toString(),
+                                    mEditTextPrice.getText().toString().trim(), mEditTextContactInfo.getText().toString().trim(),
+                                    mEditTextDescription.getText().toString().trim());
                             String uploadId = mDatabaseRef.push().getKey(); //create a new entry in database with unique Id
                             mDatabaseRef.child(uploadId).setValue(upload);  //set the Id's data as upload which contains the name and the imageUrl
+                            //mDatabaseRef.child(userId).setValue(upload);
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
