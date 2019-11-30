@@ -1,27 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
-    <LinearLayout
+    <!-- search bar -->
+    <EditText
+        android:id="@+id/search_input"
+        android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:hint="\u0020\u0020\u0020Search for Products"
+        android:drawableLeft="@drawable/ic_search_black_24dp"
+        android:singleLine="true"
+        android:imeOptions="actionDone" />
 
+    <!-- display of in stock item count -->
+    <TextView
+        android:id="@+id/item_count"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="20dp"
+        android:paddingBottom="8dp"
+        android:textSize="18sp"
+        android:text="@string/on_sales_string"/>
 
-        <SearchView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/refresh"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-        <!--
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/news_feed_recycler"
+            android:id="@+id/re_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scrollbars="vertical"/> -->
-    </LinearLayout>
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true" />
 
-</androidx.core.widget.NestedScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+</LinearLayout>

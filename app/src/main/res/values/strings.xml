@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Campus Trading App</string>
+    <string name="on_sales_string">In Stock: %s items</string>
 </resources>

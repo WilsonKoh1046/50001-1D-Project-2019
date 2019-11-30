@@ -17,7 +17,7 @@ public class Home extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        BottomNavigationView bottomBar = findViewById(R.id.bottom_navigation);
+        BottomNavigationView bottomBar = findViewById(R.id.bottom_nav);
         bottomBar.setOnNavigationItemSelectedListener(barListener);
 
         // make news feed page as default page
