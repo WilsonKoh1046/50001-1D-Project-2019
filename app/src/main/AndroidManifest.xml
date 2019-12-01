@@ -11,7 +11,8 @@
         android:theme="@style/AppTheme">
         <activity android:name=".ImagesActivity"></activity>
 
-        <activity android:name=".Home" />
+        <activity android:name=".Home"
+            android:windowSoftInputMode="adjustPan|adjustResize"/>
 
 
         <activity android:name=".MainActivity"></activity>
