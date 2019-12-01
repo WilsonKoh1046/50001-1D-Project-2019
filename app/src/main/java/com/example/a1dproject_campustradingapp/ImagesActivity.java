@@ -80,10 +80,10 @@ public class ImagesActivity extends AppCompatActivity implements ImageAdapter.On
                     mUploads.add(upload);
                 }
 
-                //mAdapter = new ImageAdapter(ImagesActivity.this, mUploads);
-                mAdapter.notifyDataSetChanged();
+                mAdapter = new ImageAdapter(ImagesActivity.this, mUploads);
+                //mAdapter.notifyDataSetChanged();
 
-                //mRecyclerView.setAdapter(mAdapter);
+                mRecyclerView.setAdapter(mAdapter);
                 mProgressCircle.setVisibility(View.INVISIBLE);
             }
 

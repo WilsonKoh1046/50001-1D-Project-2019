@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -27,6 +28,7 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -51,6 +53,7 @@ public class UploadFragment extends Fragment {
     private EditText mEditTextPrice;
     private EditText mEditTextContactInfo;
     private EditText mEditTextDescription;
+    private Spinner mSpinner;
 
     private Uri mImageUri;  //reference to the image
 
@@ -77,14 +80,17 @@ public class UploadFragment extends Fragment {
         mEditTextContactInfo = view.findViewById(R.id.edit_text_contact_info);
 
         //TODO supply the spinner with the array using an instance of ArrayAdapter
-        Spinner spinner = (Spinner)view.findViewById(R.id.spinner_type);
+        mSpinner = (Spinner)view.findViewById(R.id.spinner_type);
         //Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(context,
                 R.array.category_array,android.R.layout.simple_spinner_item);
         // Specify the layout to use when the list of choices appear
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
-        spinner.setAdapter(adapter);
+        mSpinner.setAdapter(adapter);
+
+        //mSpinner.setOnItemClickListener((AdapterView.OnItemClickListener) context);
+
 
                 //save in a folder called "uploads" in the storage
         mStorageRef = FirebaseStorage.getInstance().getReference("uploads");
@@ -175,12 +181,26 @@ public class UploadFragment extends Fragment {
                             }, 500); //delay the progress bar to see the processing
 
                             Toast.makeText(context, "Upload Successful", Toast.LENGTH_LONG).show();
+                            /*
                             Upload upload = new Upload(mEditTextProductName.getText().toString().trim(),
-                                    taskSnapshot.getMetadata().getReference().getDownloadUrl().toString(),
+                                    taskSnapshot.getUploadSessionUri().toString(),
                                     mEditTextPrice.getText().toString().trim(), mEditTextContactInfo.getText().toString().trim(),
                                     mEditTextDescription.getText().toString().trim());
                             String uploadId = mDatabaseRef.push().getKey(); //create a new entry in database with unique Id
                             mDatabaseRef.child(uploadId).setValue(upload);  //set the Id's data as upload which contains the name and the imageUrl
+                             */
+
+                            Task<Uri> urlTask = taskSnapshot.getStorage().getDownloadUrl();
+                            while(! urlTask.isSuccessful());
+                            Uri downloadUrl = urlTask.getResult();
+                            String spinnerCategory = mSpinner.getSelectedItem().toString();
+                            Upload upload = new Upload(spinnerCategory,mEditTextProductName.getText().toString().trim(),
+                                    downloadUrl.toString(),
+                                    mEditTextPrice.getText().toString().trim(), mEditTextContactInfo.getText().toString().trim(),
+                                    mEditTextDescription.getText().toString().trim());
+                            String uploadId = mDatabaseRef.push().getKey();
+                            mDatabaseRef.child(uploadId).setValue(upload);
+
 
                             String currentUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
                             mDatabaseRef_user = FirebaseDatabase.getInstance().getReference(currentUser);

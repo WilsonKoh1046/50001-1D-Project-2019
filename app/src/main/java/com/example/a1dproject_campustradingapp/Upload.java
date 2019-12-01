@@ -9,20 +9,30 @@ public class Upload {
     private String mPrice;
     private String mDescription;
     private String mContactInfo;
+    private String mCategory;
 
     public Upload(){
         //empty constructor needed to work with firebase database
     }
 
-    public Upload(String name, String imageUrl, String price, String contactInfo, String description){
+    public Upload(String category,String name, String imageUrl, String price, String contactInfo, String description){
         if(name.trim().equals("")){
             name = "No Name";
         }
+        mCategory = category;
         mName = name;
         mImageUrl = imageUrl;
         mDescription = description;
         mPrice = price;
         mContactInfo = contactInfo;
+    }
+
+    public String getmCategory(){
+        return mCategory;
+    }
+
+    public void setmCategory(String mCategory) {
+        this.mCategory = mCategory;
     }
 
     public String getmName() {

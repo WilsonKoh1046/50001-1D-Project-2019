@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
@@ -43,9 +44,10 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
         Upload uploadCurrent = mUploads.get(position);
         holder.textViewName.setText(uploadCurrent.getmName());
 
+        //Glide.with(mContext).load(uploadCurrent.getmImageUrl()).into(holder.imageView);
         Picasso.get().load(uploadCurrent.getmImageUrl())
-                .placeholder(R.mipmap.ic_launcher)
-                .fit().centerCrop().into(holder.imageView);
+                .placeholder(R.mipmap.ic_launcher).centerInside()
+                .fit().into(holder.imageView);
     }
 
     @Override
