@@ -204,6 +204,7 @@ public class HomeFragment extends Fragment {
                     for (String key: key_values.keySet()) {
                         if (key_values.get(key) == upload) { // get the key of the current item
                             dataKey += key;
+                            break;
                         }
                     }
                     intent.putExtra("key", dataKey); // pass this key to the individual product page
