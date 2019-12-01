@@ -34,6 +34,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 
 import com.squareup.picasso.Picasso;
 
@@ -48,12 +49,18 @@ public class HomeFragment extends Fragment {
     private SwipeRefreshLayout swipeRefreshLayout;
     // private TextView itemCount;
     private EditText searchInput;
+    private HashMap<String, Upload> mHashMap;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        context = getActivity(); // get host activity
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        context = getActivity(); // get host activity
-        final View view = inflater.inflate(R.layout.fragment_home, container, false);
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.re_view);
         linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -62,6 +69,7 @@ public class HomeFragment extends Fragment {
         // itemCount = (TextView) view.findViewById(R.id.item_count);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh);
         searchInput = (EditText) view.findViewById(R.id.search_input);
+        mHashMap = new HashMap<String, Upload>();
 
         if (databaseReference != null) { // check if our database is null
             databaseReference.addValueEventListener(new ValueEventListener() {
@@ -71,10 +79,12 @@ public class HomeFragment extends Fragment {
                         list.clear(); //  important, to prevent duplicated entries
                         for (DataSnapshot snapShot: dataSnapshot.getChildren()) {
                             Upload items = snapShot.getValue(Upload.class);
+                            String key = snapShot.getKey();
                             list.add(items);
+                            mHashMap.put(key, items);
                         }
                         Collections.reverse(list); // sort the items starting from most recent
-                        adapter = new homeFragmentAdapter(list);
+                        adapter = new homeFragmentAdapter(list, mHashMap);
                         recyclerView.setAdapter(adapter);
                         // itemCount.setText(getString(R.string.on_sales_string, Integer.toString(adapter.getItemCount())));
                         adapter.notifyDataSetChanged();
@@ -151,9 +161,11 @@ public class HomeFragment extends Fragment {
     public class homeFragmentAdapter extends RecyclerView.Adapter<homeFragmentAdapter.homeViewHolder> {
 
         private ArrayList<Upload> items_list;
+        private HashMap<String, Upload> key_values;
 
-        public homeFragmentAdapter(ArrayList<Upload> data) {  // * TODO
+        public homeFragmentAdapter(ArrayList<Upload> data, HashMap<String, Upload> keyList) {
             this.items_list = data;
+            this.key_values = keyList;
         }
 
         public class homeViewHolder extends RecyclerView.ViewHolder {
@@ -179,10 +191,25 @@ public class HomeFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull homeViewHolder holder, int position) {
-            Upload upload = items_list.get(position);
+            final Upload upload = items_list.get(position);
             Picasso.get().load(upload.getmImageUrl()).placeholder(R.drawable.ic_insert_photo_black_24dp).fit().centerCrop().into(holder.image);
             holder.name.setText(upload.getmName());
             holder.price.setText(upload.getmPrice());
+
+            holder.image.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String dataKey = "";
+                    Intent intent = new Intent(v.getContext(), Product.class);
+                    for (String key: key_values.keySet()) {
+                        if (key_values.get(key) == upload) { // get the key of the current item
+                            dataKey += key;
+                        }
+                    }
+                    intent.putExtra("key", dataKey); // pass this key to the individual product page
+                    v.getContext().startActivity(intent);
+                }
+            });
         }
 
         @Override
