@@ -180,7 +180,7 @@ public class HomeFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull homeViewHolder holder, int position) {
             Upload upload = items_list.get(position);
-            Picasso.get().load(upload.getmImageUrl()).placeholder(R.drawable.ic_insert_photo_black_24dp).fit().centerCrop().into(holder.image);
+            Picasso.get().load(upload.getmImageUrl()).placeholder(R.drawable.ic_insert_photo_black_24dp).centerInside().fit().into(holder.image);
             holder.name.setText(upload.getmName());
             holder.price.setText(upload.getmPrice());
         }
