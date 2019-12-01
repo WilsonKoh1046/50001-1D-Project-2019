@@ -41,12 +41,12 @@ public class HomeFragment extends Fragment {
 
     private DatabaseReference databaseReference;
     private RecyclerView.LayoutManager linearLayoutManager;
-    private ArrayList<Upload> list;    // * TODO
+    private ArrayList<Upload> list;
     private RecyclerView recyclerView;
     private homeFragmentAdapter adapter;
     private Activity context;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private TextView itemCount;
+    // private TextView itemCount;
     private EditText searchInput;
 
     @Nullable
@@ -57,8 +57,9 @@ public class HomeFragment extends Fragment {
         recyclerView = (RecyclerView) view.findViewById(R.id.re_view);
         linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
-        databaseReference = FirebaseDatabase.getInstance().getReference().child("uploads"); // * TODO
-        list = new ArrayList<Upload>(); // list of the items we want to display           // * TODO
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("uploads");
+        list = new ArrayList<Upload>(); // list of the items we want to display
+        // itemCount = (TextView) view.findViewById(R.id.item_count);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh);
         searchInput = (EditText) view.findViewById(R.id.search_input);
 
@@ -69,14 +70,13 @@ public class HomeFragment extends Fragment {
                     if (dataSnapshot.exists()) {
                         list.clear(); //  important, to prevent duplicated entries
                         for (DataSnapshot snapShot: dataSnapshot.getChildren()) {
-                            Upload items = snapShot.getValue(Upload.class); // * TODO
+                            Upload items = snapShot.getValue(Upload.class);
                             list.add(items);
                         }
                         Collections.reverse(list); // sort the items starting from most recent
                         adapter = new homeFragmentAdapter(list);
                         recyclerView.setAdapter(adapter);
-                        itemCount = (TextView) view.findViewById(R.id.item_count);
-                        itemCount.setText(getString(R.string.on_sales_string, Integer.toString(adapter.getItemCount())));
+                        // itemCount.setText(getString(R.string.on_sales_string, Integer.toString(adapter.getItemCount())));
                         adapter.notifyDataSetChanged();
                     }
                 }
@@ -126,15 +126,15 @@ public class HomeFragment extends Fragment {
     }
 
     public void search(String s) {
-        ArrayList<Upload> result = new ArrayList<Upload>(); // * TODO
-        for (Upload items: list) {                            // * TODO
-            if (items.getmName().toLowerCase().contains(s.toLowerCase())) { // match by keywords contained // * TODO
+        ArrayList<Upload> result = new ArrayList<Upload>();
+        for (Upload items: list) {
+            if (items.getmName().toLowerCase().contains(s.toLowerCase())) { // match by keywords contained
                 result.add(items);
             }
         }
         adapter.filter(result);
         // Update in stock number of the search products
-        itemCount.setText(getString(R.string.on_sales_string, Integer.toString(adapter.getItemCount())));
+        // itemCount.setText(getString(R.string.on_sales_string, Integer.toString(adapter.getItemCount())));
     }
 
     // update layout upon refreshing
@@ -148,9 +148,9 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    public class homeFragmentAdapter extends RecyclerView.Adapter {
+    public class homeFragmentAdapter extends RecyclerView.Adapter<homeFragmentAdapter.homeViewHolder> {
 
-        private ArrayList<Upload> items_list; // * TODO
+        private ArrayList<Upload> items_list;
 
         public homeFragmentAdapter(ArrayList<Upload> data) {  // * TODO
             this.items_list = data;
@@ -168,24 +168,21 @@ public class HomeFragment extends Fragment {
                 this.name = (TextView) view.findViewById(R.id.pro_title);
                 this.price = (TextView) view.findViewById(R.id.pro_price);
             }
-
-            public void bindHolder(int position) {
-                Picasso.get().load(items_list.get(position).getmImageUrl()).placeholder(R.drawable.ic_insert_photo_black_24dp).fit().centerCrop().into(this.image);   // * TODO
-                this.name.setText(items_list.get(position).getmName());             // * TODO
-                this.price.setText(items_list.get(position).getmPrice());            // * TODO
-            }
         }
 
         @NonNull
         @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        public homeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_card, parent, false);
             return new homeViewHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-            ((homeViewHolder) holder).bindHolder(position);
+        public void onBindViewHolder(@NonNull homeViewHolder holder, int position) {
+            Upload upload = items_list.get(position);
+            Picasso.get().load(upload.getmImageUrl()).placeholder(R.drawable.ic_insert_photo_black_24dp).fit().centerCrop().into(holder.image);
+            holder.name.setText(upload.getmName());
+            holder.price.setText(upload.getmPrice());
         }
 
         @Override
@@ -193,7 +190,7 @@ public class HomeFragment extends Fragment {
             return items_list.size();
         }
 
-        public void filter(ArrayList<Upload> list) {  // * TODO
+        public void filter(ArrayList<Upload> list) {
             items_list = list;
             notifyDataSetChanged();
         }

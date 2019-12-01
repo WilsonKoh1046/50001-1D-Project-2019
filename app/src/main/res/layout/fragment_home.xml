@@ -15,6 +15,7 @@
         android:imeOptions="actionDone" />
 
     <!-- display of in stock item count -->
+    <!--
     <TextView
         android:id="@+id/item_count"
         android:layout_height="wrap_content"
@@ -23,7 +24,7 @@
         android:layout_marginLeft="20dp"
         android:paddingBottom="8dp"
         android:textSize="18sp"
-        android:text="@string/on_sales_string"/>
+        android:text="@string/on_sales_string"/> -->
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/refresh"
