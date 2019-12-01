@@ -7,11 +7,10 @@
     android:padding="10dp"
     tools:context=".ImagesActivity">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-
 
 
         <EditText
@@ -19,44 +18,51 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="50dp"
-            android:hint="Product name" />
+            android:layout_marginTop="30dp"
+            android:hint="Product name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
             android:id="@+id/edit_text_price"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:hint="Price" />
+            android:layout_marginTop="50dp"
+            android:hint="Price"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/edit_text_file_name" />
 
         <EditText
             android:id="@+id/edit_text_contact_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginTop="50dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/edit_text_price"
             android:hint="Contact Information" />
 
         <Spinner
             android:id="@+id/spinner_type"
-            android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginTop="50dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/edit_text_contact_info"
             />
 
         <EditText
             android:id="@+id/edit_text_description"
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:gravity="bottom"
+            android:layout_marginTop="50dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/edit_text_contact_info"
             android:lines="4"
             android:maxLength="100"
             android:hint="Description (max 4 lines)" />
@@ -66,9 +72,10 @@
             android:id="@+id/button_choose_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_alignParentTop="true"
-            android:layout_below="@+id/edit_text_description"
+            android:layout_marginTop="100dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/edit_text_description"
             android:text="Choose Image" />
 
         <ProgressBar
@@ -76,38 +83,42 @@
             style="@style/Widget.AppCompat.ProgressBar.Horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_above="@+id/button_upload"
+            android:layout_marginTop="500dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             android:layout_marginBottom="16dp" />
 
         <ImageView
             android:id="@+id/image_view"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginRight="10dp" />
+            android:layout_marginTop="50dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/button_choose_image" />
 
         <Button
             android:id="@+id/button_upload"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-
-            android:text="Upload" />
+            android:layout_marginTop="50dp"
+            android:text="Upload"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/progreess_bar" />
 
         <TextView
             android:id="@+id/textview_show_uploads"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="16sp"
             android:gravity="center"
             android:text="Show Uploaded Image"
-            android:layout_marginBottom="50dp"
-            android:textSize="16sp"
-            android:layout_marginLeft="10dp" />
+            android:layout_marginTop="50dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/button_upload" />
 
     <!--
     <ProgressBar
@@ -121,6 +132,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" /> -->
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
 
