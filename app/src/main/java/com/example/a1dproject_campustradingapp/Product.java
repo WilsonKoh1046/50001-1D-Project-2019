@@ -20,6 +20,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.util.Locale;
+
 public class Product extends AppCompatActivity {
 
     private String key;
@@ -28,6 +30,7 @@ public class Product extends AppCompatActivity {
     private TextView priceView;
     private TextView descriptionView;
     private TextView contactView;
+    private TextView CategoryView;
     private DatabaseReference mDatabaseReference;
 
     @Override
@@ -41,6 +44,7 @@ public class Product extends AppCompatActivity {
         priceView = (TextView) findViewById(R.id.detail_price);
         descriptionView = (TextView) findViewById(R.id.detail_description);
         contactView = (TextView) findViewById(R.id.detail_contact);
+        CategoryView = (TextView)findViewById(R.id.detail_category);
 
         if (bundle != null) {
             key = (String) bundle.get("key"); // receive the item key from the card
@@ -65,6 +69,7 @@ public class Product extends AppCompatActivity {
                 priceView.setText(String.valueOf(upload.getmPrice())+"sgd");
                 descriptionView.setText(String.valueOf(upload.getmDescription()));
                 contactView.setText(String.valueOf(upload.getmContactInfo()));
+                CategoryView .setText(String.valueOf(upload.getmCategory()));
             }
 
             @Override
