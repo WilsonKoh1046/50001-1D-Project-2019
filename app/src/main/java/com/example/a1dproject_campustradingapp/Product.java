@@ -62,7 +62,7 @@ public class Product extends AppCompatActivity {
 
                 Picasso.get().load(upload.getmImageUrl()).placeholder(R.drawable.ic_insert_photo_black_24dp).fit().centerCrop().into(mImageView);
                 nameView.setText(String.valueOf(upload.getmName()));
-                priceView.setText(String.valueOf(upload.getmPrice()));
+                priceView.setText(String.valueOf(upload.getmPrice())+"sgd");
                 descriptionView.setText(String.valueOf(upload.getmDescription()));
                 contactView.setText(String.valueOf(upload.getmContactInfo()));
             }
