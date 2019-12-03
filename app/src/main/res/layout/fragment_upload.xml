@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:padding="10dp"
     tools:context=".ImagesActivity"
-    android:layout_marginBottom="60dp">
+    android:layout_marginBottom="55dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -19,7 +19,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_marginTop="70dp"
             android:hint="Product name"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
