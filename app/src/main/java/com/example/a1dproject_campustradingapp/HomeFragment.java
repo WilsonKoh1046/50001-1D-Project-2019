@@ -138,7 +138,10 @@ public class HomeFragment extends Fragment {
     public void search(String s) {
         ArrayList<Upload> result = new ArrayList<Upload>();
         for (Upload items: list) {
-            if (items.getmName().toLowerCase().contains(s.toLowerCase())) { // match by keywords contained
+            String tag;
+            tag = String.valueOf(items.getmCategory());
+            if (items.getmName().toLowerCase().contains(s.toLowerCase())
+                    || tag.toLowerCase().contains(s.toLowerCase())) { // match by keywords of name or category contained
                 result.add(items);
             }
         }
