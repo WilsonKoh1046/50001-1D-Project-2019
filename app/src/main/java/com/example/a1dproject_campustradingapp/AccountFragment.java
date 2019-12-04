@@ -3,6 +3,7 @@ package com.example.a1dproject_campustradingapp;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,7 +34,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AccountFragment extends Fragment {
+public class AccountFragment extends Fragment implements AccountSellingAdapter.OnItemClickListener{
 
     private RecyclerView mRecyclerView;
     private AccountSellingAdapter mAdapter;
@@ -41,16 +42,17 @@ public class AccountFragment extends Fragment {
     private FirebaseStorage mStorage;
     private DatabaseReference mDatabaseRef;
     private ValueEventListener mDBListener;
-
     private List<Upload> mUploads;
     private ImageView profilepic;
     private TextView nametext;
     private TextView idtext;
     private TextView emailtext;
-    private Button editbtn, logoutbtn;
+    private Button editbtn, logoutbtn, cartbtn;
     private FirebaseAuth firebaseAuth;
     private FirebaseDatabase firebaseDatabase;
     Activity acccontext;
+
+
 
 
     @Nullable
@@ -63,9 +65,22 @@ public class AccountFragment extends Fragment {
         idtext=view.findViewById(R.id.idtext);
         emailtext=view.findViewById(R.id.emailtext);
         editbtn=view.findViewById(R.id.editbtn);
+        cartbtn=view.findViewById(R.id.btn_cart);
         firebaseAuth= FirebaseAuth.getInstance();
         firebaseDatabase= FirebaseDatabase.getInstance();
-        DatabaseReference databaseReference=firebaseDatabase.getReference(firebaseAuth.getUid());
+        final DatabaseReference databaseReference=firebaseDatabase.getReference(firebaseAuth.getUid());
+        mRecyclerView = view.findViewById(R.id.account_recycle_view);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(acccontext));
+
+        mUploads = new ArrayList<>();
+
+        mAdapter = new AccountSellingAdapter(acccontext, mUploads);
+
+        mAdapter.setOnItemClickListener(AccountFragment.this);
+
+        mRecyclerView.setAdapter(mAdapter);
+
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -81,39 +96,17 @@ public class AccountFragment extends Fragment {
 
             }
         });
-        /*
-        editbtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(acccontext,UpdateProfile.class));
-            }
-        });
 
-         */
-        mRecyclerView = view.findViewById(R.id.account_recycle_view);
-        mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(acccontext));
-
-//        mAdapter.setOnItemClickListener(ImagesActivity.this);
-
-
-        mUploads = new ArrayList<>();
-
-        mAdapter = new AccountSellingAdapter(acccontext, mUploads);
-
-        mRecyclerView.setAdapter(mAdapter);
-
-        //mAdapter.setOnItemClickListener(AccountSellingActivity.this);
 
         mStorage = FirebaseStorage.getInstance();
-        mDatabaseRef = FirebaseDatabase.getInstance().getReference("uploads");
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference(firebaseAuth.getUid()).child("user_uploads");
         /*
         firebaseStorage=FirebaseStorage.getInstance();
         StorageReference storageReference=firebaseStorage.getReference();
 
          */
         StorageReference storageReference=mStorage.getReference();
-        storageReference.child(firebaseAuth.getUid()).child("Images/Profile Pic").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+        storageReference.child(firebaseAuth.getUid()).child("user_profile_image").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
                 Picasso.get().load(uri).into(profilepic);
@@ -139,6 +132,24 @@ public class AccountFragment extends Fragment {
                 //mAdapter.notifyDataSetChanged();
 
                 mRecyclerView.setAdapter(mAdapter);
+
+                mAdapter.setOnItemClickListener(new AccountSellingAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(int position) {
+
+                    }
+
+                    @Override
+                    public void onDeleteClick(int position) {
+                        //Toast.makeText(acccontext, "Delete click at position: " + position, Toast.LENGTH_SHORT).show();
+                        final Upload selectedItem = mUploads.get(position);
+                        final String selectedKey = selectedItem.getmName();
+                        FirebaseDatabase.getInstance().getReference(firebaseAuth.getUid()).child("user_uploads").child(selectedKey).removeValue();
+                        Log.i("test",selectedItem.getmImageUri());
+                        FirebaseDatabase.getInstance().getReference("uploads").child(selectedItem.getmImageUri()).removeValue();
+                        Toast.makeText(acccontext, "Item deleted", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
 
             @Override
@@ -148,12 +159,25 @@ public class AccountFragment extends Fragment {
             }
         });
 
-
-
 //        Intent intent = new Intent(acccontext, AccountSellingActivity.class);
 //        startActivity(intent);
         return view;
     }
+    @Override
+    public void onItemClick(int position) {
+
+    }
+
+    @Override
+    public void onDeleteClick(int position) {
+        Toast.makeText(acccontext, "Delete click at position: " + position, Toast.LENGTH_SHORT).show();
+        final Upload selectedItem = mUploads.get(position);
+        final String selectedKey = selectedItem.getmName();
+        FirebaseDatabase.getInstance().getReference(FirebaseAuth.getInstance().getUid()).child("user_uploads").child(selectedKey).removeValue();
+        FirebaseDatabase.getInstance().getReference("uploads").child(selectedItem.getmImageUrl()).removeValue();
+        Toast.makeText(acccontext, "Item deleted", Toast.LENGTH_SHORT).show();
+    }
+
 
     @Override
     public void onStart() {
@@ -178,5 +202,33 @@ public class AccountFragment extends Fragment {
             }
         });
 
+        Button btn_cart = acccontext.findViewById(R.id.btn_cart);
+        btn_cart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //acccontext.finish();
+                startActivity(new Intent(acccontext, ImagesActivity.class));
+            }
+        });
     }
+
+
+
+//    @Override
+//    public void onItemClick(int position) {
+//        Toast.makeText(acccontext, " click at position: " + position, Toast.LENGTH_SHORT).show();
+//    }
+//
+//    @Override
+//    public void onDeleteClick(int position) {
+//        Toast.makeText(acccontext, "Delete click at position: " + position, Toast.LENGTH_SHORT).show();
+//        final Upload selectedItem = mUploads.get(position);
+//        final String selectedKey = selectedItem.getmName();
+//        FirebaseDatabase.getInstance().getReference(FirebaseAuth.getInstance().getUid()).child("user_uploads").child(selectedKey).removeValue();
+//        FirebaseDatabase.getInstance().getReference("uploads").child(selectedItem.getmImageUrl()).removeValue();
+//        Toast.makeText(acccontext, "Item deleted", Toast.LENGTH_SHORT).show();
+//    }
+
+
+
 }

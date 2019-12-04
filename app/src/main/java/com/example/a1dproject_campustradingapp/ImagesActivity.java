@@ -37,7 +37,7 @@ public class ImagesActivity extends AppCompatActivity implements ImageAdapter.On
     private DatabaseReference mDatabaseRef;
     private ValueEventListener mDBListener;
 
-    private List<Upload> mUploads;
+    private List<Favourites> mFavorites;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,32 +55,35 @@ public class ImagesActivity extends AppCompatActivity implements ImageAdapter.On
 
         mProgressCircle = findViewById(R.id.progress_circle);
 
-        mUploads = new ArrayList<>();
+        mFavorites = new ArrayList<>();
 
-        mAdapter = new ImageAdapter(ImagesActivity.this, mUploads);
+        mAdapter = new ImageAdapter(ImagesActivity.this, mFavorites);
 
         mRecyclerView.setAdapter(mAdapter);
 
         mAdapter.setOnItemClickListener(ImagesActivity.this);
 
         mStorage = FirebaseStorage.getInstance();
-        mDatabaseRef = FirebaseDatabase.getInstance().getReference("uploads");
+
+        String currentUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference(currentUser).child("favourites");
+        //mDatabaseRef = FirebaseDatabase.getInstance().getReference("uploads");
 
         mDBListener = mDatabaseRef.addValueEventListener(new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                mUploads.clear();
+                mFavorites.clear();
 
                 //dataSnapshot is a list which represent our data at the mDatabaseRef
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()){
-                    Upload upload = postSnapshot.getValue(Upload.class);
-                    upload.setmKey(postSnapshot.getKey());
-                    mUploads.add(upload);
+                    Favourites favourite = postSnapshot.getValue(Favourites.class);
+                    favourite.setfKey(postSnapshot.getKey());
+                    mFavorites.add(favourite);
                 }
 
-                mAdapter = new ImageAdapter(ImagesActivity.this, mUploads);
+                mAdapter = new ImageAdapter(ImagesActivity.this, mFavorites);
                 //mAdapter.notifyDataSetChanged();
 
                 mRecyclerView.setAdapter(mAdapter);
@@ -104,9 +107,9 @@ public class ImagesActivity extends AppCompatActivity implements ImageAdapter.On
     @Override
     public void onDeleteClick(int position) {
         Toast.makeText(this, "Delete click at position: " + position, Toast.LENGTH_SHORT).show();
-        Upload selectedItem = mUploads.get(position);
-        final String selectedKey = selectedItem.getmKey();
-        StorageReference imageRef = mStorage.getReferenceFromUrl(selectedItem.getmImageUrl());
+        Favourites selectedItem = mFavorites.get(position);
+        final String selectedKey = selectedItem.getfKey();
+        StorageReference imageRef = mStorage.getReferenceFromUrl(selectedItem.getfImageURL());
         //String imageUrl = "https://firebasestorage.googleapis.com/v0/b/project-1d-50001.appspot.com/o/uploads%2F1574168053005.jpg?alt=media&token=82ac181d-674c-4156-a67a-6e3d80fd24fa";
         //StorageReference imageRef = FirebaseStorage.getInstance().getReference().child(imageUrl);
         //StorageReference imageRef = mStorage.getReference().child(imageUrl);
@@ -114,7 +117,7 @@ public class ImagesActivity extends AppCompatActivity implements ImageAdapter.On
         imageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                // mDatabaseRef.child(selectedKey).removeValue();
+                mDatabaseRef.child(selectedKey).removeValue();
                 Toast.makeText(ImagesActivity.this, "Item deleted", Toast.LENGTH_SHORT).show();
             }
         });

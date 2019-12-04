@@ -23,12 +23,12 @@ import java.util.List;
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHolder> {
 
     private Context mContext;
-    private List<Upload> mUploads;
+    private List<Favourites> mFavourites;
     private OnItemClickListener mListener;
 
-    public ImageAdapter(Context context, List<Upload> uploads){
+    public ImageAdapter(Context context, List<Favourites> favourites){
         mContext = context;
-        mUploads = uploads;
+        mFavourites = favourites;
     }
 
     @NonNull
@@ -41,18 +41,18 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
     //get data from upload item and
     @Override
     public void onBindViewHolder(@NonNull ImageViewHolder holder, int position) {
-        Upload uploadCurrent = mUploads.get(position);
-        holder.textViewName.setText(uploadCurrent.getmName());
+        Favourites favoriteCurrent = mFavourites.get(position);
+        holder.textViewName.setText(favoriteCurrent.getfName());
 
         //Glide.with(mContext).load(uploadCurrent.getmImageUrl()).into(holder.imageView);
-        Picasso.get().load(uploadCurrent.getmImageUrl())
+        Picasso.get().load(favoriteCurrent.getfImageURL())
                 .placeholder(R.mipmap.ic_launcher).centerInside()
                 .fit().into(holder.imageView);
     }
 
     @Override
     public int getItemCount() {
-        return mUploads.size();
+        return mFavourites.size();
     }
 
     public class ImageViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,

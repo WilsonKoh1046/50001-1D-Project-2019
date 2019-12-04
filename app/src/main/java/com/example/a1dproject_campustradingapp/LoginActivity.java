@@ -56,10 +56,10 @@ public class LoginActivity extends AppCompatActivity {
         FirebaseUser user = firebaseAuth.getCurrentUser();
 
 
-        //if(user != null){
-            //finish(); //destroy current activity
-            //startActivity(new Intent(LoginActivity.this, Home.class));
-        //}
+        if(user != null){
+            finish(); //destroy current activity
+            startActivity(new Intent(LoginActivity.this, Home.class));
+        }
 
 
         //SetOnClickListener for buttons

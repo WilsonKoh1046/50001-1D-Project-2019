@@ -1,5 +1,7 @@
 package com.example.a1dproject_campustradingapp;
 
+import com.google.firebase.database.Exclude;
+
 public class Favourites {
     private String fImageURL;
     private String fName;
@@ -7,6 +9,7 @@ public class Favourites {
     private String fCategory;
     private String fContact;
     private String fDescription;
+    private String fKey;
 
     public Favourites() {
 
@@ -58,5 +61,16 @@ public class Favourites {
 
     public void setfDescription(String fDescription) {
         this.fDescription = fDescription;
+    }
+
+
+    @Exclude
+    public String getfKey(){
+        return fKey;
+    }
+
+    @Exclude
+    public void setfKey(String key){
+        fKey = key;
     }
 }

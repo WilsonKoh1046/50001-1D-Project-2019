@@ -71,7 +71,7 @@ public class UploadFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_upload, container, false);
         mButtonChooseImage = view.findViewById(R.id.button_choose_image);
         mButtonUpload = view.findViewById(R.id.button_upload);
-        mTextViewShowUploads = view.findViewById(R.id.textview_show_uploads);
+        //mTextViewShowUploads = view.findViewById(R.id.textview_show_uploads);
         mEditTextProductName = view.findViewById(R.id.edit_text_file_name);
         mImageView = view.findViewById(R.id.image_view);
         mProgressBar = view.findViewById(R.id.progreess_bar);
@@ -117,12 +117,12 @@ public class UploadFragment extends Fragment {
             }
         });
 
-        mTextViewShowUploads.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openImagesActivity();
-            }
-        });
+//        mTextViewShowUploads.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                openImagesActivity();
+//            }
+//        });
         return view;
     }
 
@@ -194,17 +194,18 @@ public class UploadFragment extends Fragment {
                             while(! urlTask.isSuccessful());
                             Uri downloadUrl = urlTask.getResult();
                             String spinnerCategory = mSpinner.getSelectedItem().toString();
-                            Upload upload = new Upload(spinnerCategory,mEditTextProductName.getText().toString().trim(),
+                            String uploadId = mDatabaseRef.push().getKey();
+                            Upload upload = new Upload(uploadId,spinnerCategory,mEditTextProductName.getText().toString().trim(),
                                     downloadUrl.toString(),
                                     mEditTextPrice.getText().toString().trim(), mEditTextContactInfo.getText().toString().trim(),
                                     mEditTextDescription.getText().toString().trim());
-                            String uploadId = mDatabaseRef.push().getKey();
+
                             mDatabaseRef.child(uploadId).setValue(upload);
 
 
                             String currentUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
                             mDatabaseRef_user = FirebaseDatabase.getInstance().getReference(currentUser);
-                            mDatabaseRef_user.child(upload.getmName()).setValue(upload);
+                            mDatabaseRef_user.child("user_uploads").child(upload.getmName()).setValue(upload);
 
                         }
                     })

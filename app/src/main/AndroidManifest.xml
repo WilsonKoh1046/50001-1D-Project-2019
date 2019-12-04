@@ -11,11 +11,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ImagesActivity"></activity>
+
+
         <activity android:name=".UpdateProfile"></activity>
         <activity android:name=".Home"
             android:windowSoftInputMode="adjustPan|adjustResize"/>
         <activity android:name=".AccountSellingActivity"></activity>
+
+        <activity android:name=".ImagesActivity"
+            android:parentActivityName=".Home"/>
 
 
         <activity android:name=".MainActivity"></activity>

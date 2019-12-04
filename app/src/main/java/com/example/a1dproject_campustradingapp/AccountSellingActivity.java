@@ -32,6 +32,7 @@ public class AccountSellingActivity extends AppCompatActivity implements Account
     private FirebaseStorage mStorage;
     private DatabaseReference mDatabaseRef;
     private ValueEventListener mDBListener;
+    private DatabaseReference mDatabaseRef_user;
 
     private List<Upload> mUploads;
 
@@ -59,7 +60,11 @@ public class AccountSellingActivity extends AppCompatActivity implements Account
         mAdapter.setOnItemClickListener(AccountSellingActivity.this);
 
         mStorage = FirebaseStorage.getInstance();
-        mDatabaseRef = FirebaseDatabase.getInstance().getReference("uploads");
+
+        //mDatabaseRef = FirebaseDatabase.getInstance().getReference("uploads");
+        String currentUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference(currentUser);
+        //mDatabaseRef = FirebaseDatabase.getInstance().getReference("uploads");
 
         mDBListener = mDatabaseRef.addValueEventListener(new ValueEventListener() {
 
@@ -107,7 +112,7 @@ public class AccountSellingActivity extends AppCompatActivity implements Account
         imageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                // mDatabaseRef.child(selectedKey).removeValue();
+                mDatabaseRef.child("uploads").child(selectedKey).removeValue();
                 Toast.makeText(AccountSellingActivity.this, "Item deleted", Toast.LENGTH_SHORT).show();
             }
         });
