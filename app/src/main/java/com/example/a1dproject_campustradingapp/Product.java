@@ -121,12 +121,7 @@ public class Product extends AppCompatActivity {
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                     for (DataSnapshot dataSnapshot1: dataSnapshot.getChildren()) { // check if this newly copied item already in the favourites list
                                         Favourites checkFavourite = dataSnapshot1.getValue(Favourites.class);
-                                        if (String.valueOf(checkFavourite.getfName()).equals(favourites.getfName()) &&
-                                                String.valueOf(checkFavourite.getfPrice()).equals(favourites.getfPrice()) &&
-                                                String.valueOf(checkFavourite.getfImageURL()).equals(favourites.getfImageURL()) &&
-                                                String.valueOf(checkFavourite.getfCategory()).equals(favourites.getfCategory()) &&
-                                                String.valueOf(checkFavourite.getfContact()).equals(favourites.getfContact()) &&
-                                                String.valueOf(checkFavourite.getfDescription()).equals(favourites.getfDescription())) {
+                                        if (String.valueOf(checkFavourite.getfImageURL()).equals(favourites.getfImageURL())) {
                                             setCheckAdded();
                                             break;
                                         }
