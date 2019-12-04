@@ -1,6 +1,7 @@
 package com.example.a1dproject_campustradingapp;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -25,6 +27,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +43,7 @@ public class AccountFragment extends Fragment {
     private ValueEventListener mDBListener;
 
     private List<Upload> mUploads;
-    private ImageView imageview;
+    private ImageView profilepic;
     private TextView nametext;
     private TextView idtext;
     private TextView emailtext;
@@ -48,12 +52,13 @@ public class AccountFragment extends Fragment {
     private FirebaseDatabase firebaseDatabase;
     Activity acccontext;
 
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         acccontext = getActivity();
         View view = inflater.inflate(R.layout.fragment_account, container, false);
-        imageview=view.findViewById(R.id.imageview);
+        profilepic=view.findViewById(R.id.profilepic);
         nametext=view.findViewById(R.id.nametext);
         idtext=view.findViewById(R.id.idtext);
         emailtext=view.findViewById(R.id.emailtext);
@@ -102,6 +107,19 @@ public class AccountFragment extends Fragment {
 
         mStorage = FirebaseStorage.getInstance();
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("uploads");
+        /*
+        firebaseStorage=FirebaseStorage.getInstance();
+        StorageReference storageReference=firebaseStorage.getReference();
+
+         */
+        StorageReference storageReference=mStorage.getReference();
+        storageReference.child(firebaseAuth.getUid()).child("Images/Profile Pic").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Picasso.get().load(uri).into(profilepic);
+
+            }
+        });
 
         mDBListener = mDatabaseRef.addValueEventListener(new ValueEventListener() {
 

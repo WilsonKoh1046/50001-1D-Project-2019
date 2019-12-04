@@ -31,7 +31,7 @@ public class AccountActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account);
-        imageview=findViewById(R.id.imageview);
+        imageview=findViewById(R.id.profilepic);
         nametext=findViewById(R.id.nametext);
         idtext=findViewById(R.id.idtext);
         emailtext=findViewById(R.id.emailtext);
