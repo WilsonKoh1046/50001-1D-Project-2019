@@ -8,11 +8,15 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -31,7 +35,16 @@ public class Product extends AppCompatActivity {
     private TextView descriptionView;
     private TextView contactView;
     private TextView CategoryView;
+    private Button addButton;
     private DatabaseReference mDatabaseReference;
+    private FirebaseUser mCurrentUser;
+    private DatabaseReference lookForUser;
+    private DatabaseReference mFavourites;
+    private Boolean checkAdded;
+
+    public void setCheckAdded() {
+        checkAdded = false;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +58,8 @@ public class Product extends AppCompatActivity {
         descriptionView = (TextView) findViewById(R.id.detail_description);
         contactView = (TextView) findViewById(R.id.detail_contact);
         CategoryView = (TextView)findViewById(R.id.detail_category);
+        addButton = (Button) findViewById(R.id.favourite_btn);
+        checkAdded = true;
 
         if (bundle != null) {
             key = (String) bundle.get("key"); // receive the item key from the card
@@ -77,6 +92,70 @@ public class Product extends AppCompatActivity {
                 Log.i("admin", "Database error");
             }
         });
+
+        mCurrentUser = FirebaseAuth.getInstance().getCurrentUser(); // look for the current user
+        String userKey = mCurrentUser.getUid();
+        lookForUser = FirebaseDatabase.getInstance().getReference().child(userKey);
+        Log.i("Current User: ", String.valueOf(lookForUser.getKey()));
+
+        mFavourites = FirebaseDatabase.getInstance().getReference().child(userKey).child("favourites"); // create a new node for favourite items
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mFavourites != null) {
+                    final Favourites favourites = new Favourites();
+                    mDatabaseReference.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) { // make copy of the item's information
+                            Upload fUpload = dataSnapshot.getValue(Upload.class);
+                            favourites.setfImageURL(fUpload.getmImageUrl());
+                            favourites.setfName(fUpload.getmName());
+                            favourites.setfPrice(fUpload.getmPrice());
+                            favourites.setfCategory(fUpload.getmCategory());
+                            favourites.setfContact(fUpload.getmContactInfo());
+                            favourites.setfDescription(fUpload.getmDescription());
+
+                            Log.i("favourites", String.valueOf(favourites.getfName()));
+                            mFavourites.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    for (DataSnapshot dataSnapshot1: dataSnapshot.getChildren()) { // check if this newly copied item already in the favourites list
+                                        Favourites checkFavourite = dataSnapshot1.getValue(Favourites.class);
+                                        if (String.valueOf(checkFavourite.getfName()).equals(favourites.getfName()) &&
+                                                String.valueOf(checkFavourite.getfPrice()).equals(favourites.getfPrice()) &&
+                                                String.valueOf(checkFavourite.getfImageURL()).equals(favourites.getfImageURL()) &&
+                                                String.valueOf(checkFavourite.getfCategory()).equals(favourites.getfCategory()) &&
+                                                String.valueOf(checkFavourite.getfContact()).equals(favourites.getfContact()) &&
+                                                String.valueOf(checkFavourite.getfDescription()).equals(favourites.getfDescription())) {
+                                            setCheckAdded();
+                                            break;
+                                        }
+                                    }
+                                    if (checkAdded) {
+                                        mFavourites.push().setValue(favourites);
+                                        Toast.makeText(Product.this, "Item added to cart", Toast.LENGTH_LONG).show();
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+                                    Log.i("Admin", "Database error");
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            Log.i("Admin", "Database error");
+                        }
+                    });
+
+                } else {
+                    Log.i("Admin", "No node found");
+                }
+            }
+        });
+
     }
 }
 
