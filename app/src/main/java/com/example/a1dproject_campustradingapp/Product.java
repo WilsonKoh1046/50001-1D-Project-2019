@@ -71,29 +71,25 @@ public class Product extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         mDatabaseReference = FirebaseDatabase.getInstance().getReference().child("uploads").child(key); // look for the specific entry in database
-        if (mDatabaseReference != null) {
-            mDatabaseReference.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+        mDatabaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
                     Upload upload = dataSnapshot.getValue(Upload.class);
-                    if (upload.getmImageUrl() != null) {
-                        Picasso.get().load(upload.getmImageUrl()).placeholder(R.drawable.ic_insert_photo_black_24dp).fit().centerCrop().into(mImageView);
-                        nameView.setText(String.valueOf(upload.getmName()));
-                        priceView.setText(String.valueOf(upload.getmPrice())+"sgd");
-                        descriptionView.setText(String.valueOf(upload.getmDescription()));
-                        contactView.setText(String.valueOf(upload.getmContactInfo()));
-                        CategoryView .setText(String.valueOf(upload.getmCategory()));
-                    } else {
-                        Log.i("bug here", "null");
-                    }
+                    Picasso.get().load(upload.getmImageUrl()).placeholder(R.drawable.ic_insert_photo_black_24dp).fit().centerCrop().into(mImageView);
+                    nameView.setText(String.valueOf(upload.getmName()));
+                    priceView.setText(String.valueOf(upload.getmPrice())+"sgd");
+                    descriptionView.setText(String.valueOf(upload.getmDescription()));
+                    contactView.setText(String.valueOf(upload.getmContactInfo()));
+                    CategoryView .setText(String.valueOf(upload.getmCategory()));
                 }
+            }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-                    Log.i("admin", "Database error");
-                }
-            });
-        }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.i("admin", "Database error");
+            }
+        });
 
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser(); // look for the current user
         String userKey = mCurrentUser.getUid();
@@ -109,37 +105,39 @@ public class Product extends AppCompatActivity {
                     mDatabaseReference.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) { // make copy of the item's information
-                            Upload fUpload = dataSnapshot.getValue(Upload.class);
-                            favourites.setfImageURL(fUpload.getmImageUrl());
-                            favourites.setfName(fUpload.getmName());
-                            favourites.setfPrice(fUpload.getmPrice());
-                            favourites.setfCategory(fUpload.getmCategory());
-                            favourites.setfContact(fUpload.getmContactInfo());
-                            favourites.setfDescription(fUpload.getmDescription());
+                            if (dataSnapshot.exists()) {
+                                Upload fUpload = dataSnapshot.getValue(Upload.class);
+                                favourites.setfImageURL(fUpload.getmImageUrl());
+                                favourites.setfName(fUpload.getmName());
+                                favourites.setfPrice(fUpload.getmPrice());
+                                favourites.setfCategory(fUpload.getmCategory());
+                                favourites.setfContact(fUpload.getmContactInfo());
+                                favourites.setfDescription(fUpload.getmDescription());
 
-                            Log.i("favourites", String.valueOf(favourites.getfName()));
-                            mFavourites.addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                    for (DataSnapshot dataSnapshot1: dataSnapshot.getChildren()) { // check if this newly copied item already in the favourites list
-                                        Favourites checkFavourite = dataSnapshot1.getValue(Favourites.class);
-                                        if (String.valueOf(checkFavourite.getfImageURL()).equals(favourites.getfImageURL())) {
-                                            setCheckAdded();
-                                            addButton.setText("Item already in cart");
-                                            break;
+                                Log.i("favourites", String.valueOf(favourites.getfName()));
+                                mFavourites.addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        for (DataSnapshot dataSnapshot1: dataSnapshot.getChildren()) { // check if this newly copied item already in the favourites list
+                                            Favourites checkFavourite = dataSnapshot1.getValue(Favourites.class);
+                                            if (String.valueOf(checkFavourite.getfImageURL()).equals(favourites.getfImageURL())) {
+                                                setCheckAdded();
+                                                addButton.setText("Item already in cart");
+                                                break;
+                                            }
+                                        }
+                                        if (checkAdded) {
+                                            mFavourites.push().setValue(favourites);
+                                            Toast.makeText(Product.this, "Item added to cart", Toast.LENGTH_LONG).show();
                                         }
                                     }
-                                    if (checkAdded) {
-                                        mFavourites.push().setValue(favourites);
-                                        Toast.makeText(Product.this, "Item added to cart", Toast.LENGTH_LONG).show();
-                                    }
-                                }
 
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError databaseError) {
-                                    Log.i("Admin", "Database error");
-                                }
-                            });
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                                        Log.i("Admin", "Database error");
+                                    }
+                                });
+                            }
                         }
 
                         @Override
