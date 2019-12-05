@@ -70,8 +70,10 @@ public class UpdateProfile extends AppCompatActivity {
                 String name=changename.getText().toString();
                 String email=changeemail.getText().toString();
                 String id=changeid.getText().toString();
-                UserProfile userProfile=new UserProfile(name,email,id);
-                databaseReference.setValue(userProfile);
+                //UserProfile userProfile=new UserProfile(name,email,id);
+                databaseReference.child("name").setValue(name);
+                databaseReference.child("email").setValue(email);
+                databaseReference.child("id").setValue(id);
                 finish();
                 startActivity(new Intent(UpdateProfile.this,Home.class));
             }
