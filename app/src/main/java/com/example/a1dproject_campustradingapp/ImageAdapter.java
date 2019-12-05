@@ -1,6 +1,7 @@
 package com.example.a1dproject_campustradingapp;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -14,10 +15,16 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHolder> {
@@ -25,6 +32,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
     private Context mContext;
     private List<Favourites> mFavourites;
     private OnItemClickListener mListener;
+    private DatabaseReference uploadTable;
 
     public ImageAdapter(Context context, List<Favourites> favourites){
         mContext = context;
@@ -40,14 +48,38 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
 
     //get data from upload item and
     @Override
-    public void onBindViewHolder(@NonNull ImageViewHolder holder, int position) {
-        Favourites favoriteCurrent = mFavourites.get(position);
+    public void onBindViewHolder(@NonNull final ImageViewHolder holder, int position) {
+        final Favourites favoriteCurrent = mFavourites.get(position);
         holder.textViewName.setText(favoriteCurrent.getfName());
 
         //Glide.with(mContext).load(uploadCurrent.getmImageUrl()).into(holder.imageView);
         Picasso.get().load(favoriteCurrent.getfImageURL())
                 .placeholder(R.mipmap.ic_launcher).centerInside()
                 .fit().into(holder.imageView);
+
+        uploadTable = FirebaseDatabase.getInstance().getReference().child("uploads");
+        uploadTable.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                ArrayList<String> imageUrlList = new ArrayList<String>();
+                for (DataSnapshot mdataSnapshot: dataSnapshot.getChildren()) {
+                    Upload mupload = mdataSnapshot.getValue(Upload.class);
+                    imageUrlList.add(mupload.getmImageUrl());
+                }
+
+                if (imageUrlList.contains(favoriteCurrent.getfImageURL())) {
+                    holder.statusView.setText("In Stock");
+                } else {
+                    holder.statusView.setText("Sold Out");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.i("Admin", "Database error");
+            }
+        });
+
     }
 
     @Override
@@ -60,12 +92,14 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
 
         public TextView textViewName; //display the name
         public ImageView imageView;
+        public TextView statusView;
 
         public ImageViewHolder(View itemView){
             super(itemView);
 
             textViewName = itemView.findViewById(R.id.text_view_name);
             imageView = itemView.findViewById(R.id.image_view_upload);
+            statusView = itemView.findViewById(R.id.stock_status);
 
             itemView.setOnClickListener(this);
             itemView.setOnCreateContextMenuListener(this);
