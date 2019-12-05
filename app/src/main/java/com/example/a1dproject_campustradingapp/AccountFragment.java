@@ -76,7 +76,6 @@ public class AccountFragment extends Fragment implements AccountSellingAdapter.O
         mUploads = new ArrayList<>();
 
         mAdapter = new AccountSellingAdapter(acccontext, mUploads);
-
         mAdapter.setOnItemClickListener(AccountFragment.this);
 
         mRecyclerView.setAdapter(mAdapter);
@@ -106,7 +105,7 @@ public class AccountFragment extends Fragment implements AccountSellingAdapter.O
 
          */
         StorageReference storageReference=mStorage.getReference();
-        storageReference.child(firebaseAuth.getUid()).child("user_profile_image").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+        storageReference.child(firebaseAuth.getUid()).child("Images").child("Profile Pic").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
                 Picasso.get().load(uri).into(profilepic);
