@@ -59,6 +59,7 @@ public class Product extends AppCompatActivity {
         contactView = (TextView) findViewById(R.id.detail_contact);
         CategoryView = (TextView)findViewById(R.id.detail_category);
         addButton = (Button) findViewById(R.id.favourite_btn);
+        addButton.setText("Add to cart");
         checkAdded = true;
 
         if (bundle != null) {
@@ -123,6 +124,7 @@ public class Product extends AppCompatActivity {
                                         Favourites checkFavourite = dataSnapshot1.getValue(Favourites.class);
                                         if (String.valueOf(checkFavourite.getfImageURL()).equals(favourites.getfImageURL())) {
                                             setCheckAdded();
+                                            addButton.setText("Item already in cart");
                                             break;
                                         }
                                     }

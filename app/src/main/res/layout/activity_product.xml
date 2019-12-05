@@ -190,8 +190,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/detail_contact"
-            android:drawableLeft="@drawable/ic_shopping_cart_black_24dp"
-            android:text="\u0020\u0020\u0020Add to cart"/>
+            android:drawableLeft="@drawable/ic_shopping_cart_black_24dp"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </ScrollView>
