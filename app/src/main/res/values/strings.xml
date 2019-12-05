@@ -9,6 +9,7 @@
         <item>Portable mobility device</item>
         <item>Daily commodity</item>
         <item>Food</item>
+        <item>Clothes</item>
         <item>Others</item>
     </string-array>
     <string name="on_sales_string">In Stock: %s items</string>

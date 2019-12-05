@@ -71,28 +71,29 @@ public class Product extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         mDatabaseReference = FirebaseDatabase.getInstance().getReference().child("uploads").child(key); // look for the specific entry in database
-        mDatabaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Upload upload = dataSnapshot.getValue(Upload.class);
-                Log.i("Name", upload.getmName());
-                Log.i("Price", upload.getmPrice());
-                Log.i("Description", upload.getmDescription());
-                Log.i("Contact Info", upload.getmContactInfo());
+        if (mDatabaseReference != null) {
+            mDatabaseReference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    Upload upload = dataSnapshot.getValue(Upload.class);
+                    if (upload.getmImageUrl() != null) {
+                        Picasso.get().load(upload.getmImageUrl()).placeholder(R.drawable.ic_insert_photo_black_24dp).fit().centerCrop().into(mImageView);
+                        nameView.setText(String.valueOf(upload.getmName()));
+                        priceView.setText(String.valueOf(upload.getmPrice())+"sgd");
+                        descriptionView.setText(String.valueOf(upload.getmDescription()));
+                        contactView.setText(String.valueOf(upload.getmContactInfo()));
+                        CategoryView .setText(String.valueOf(upload.getmCategory()));
+                    } else {
+                        Log.i("bug here", "null");
+                    }
+                }
 
-                Picasso.get().load(upload.getmImageUrl()).placeholder(R.drawable.ic_insert_photo_black_24dp).fit().centerCrop().into(mImageView);
-                nameView.setText(String.valueOf(upload.getmName()));
-                priceView.setText(String.valueOf(upload.getmPrice())+"sgd");
-                descriptionView.setText(String.valueOf(upload.getmDescription()));
-                contactView.setText(String.valueOf(upload.getmContactInfo()));
-                CategoryView .setText(String.valueOf(upload.getmCategory()));
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.i("admin", "Database error");
-            }
-        });
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Log.i("admin", "Database error");
+                }
+            });
+        }
 
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser(); // look for the current user
         String userKey = mCurrentUser.getUid();
